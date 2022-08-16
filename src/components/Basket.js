@@ -8,7 +8,7 @@ function Basket({onClose, onRemove, items = []}) {
                 <div className="basket__items">
                     
                     {items.map((obj) => (
-                        <div className="basket__item">
+                        <div key={obj.id} className="basket__item">
                         <div className="basket__item-img" style={{ backgroundImage: `url(${obj.imgUrl})` }}></div>
                         <div className="basket__item-block">
                         <p>{obj.title}</p>
