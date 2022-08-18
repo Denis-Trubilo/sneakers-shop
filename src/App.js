@@ -6,8 +6,11 @@ import axios from "axios";
 
 import Header from './components/Header';
 import Basket from "./components/Basket";
-import Home from "./components/pages/Home";
-import Favorites from "./components/pages/Favorites";
+import AppContext from "./context";
+import Home from "./pages/Home";
+import Favorites from "./pages/Favorites";
+
+// создаём глобальный объект с поощью которого создаётся зависимость компонентов (что будет менятся в объекте, то будет меняться в компонентах)
 
 // const arrSneakers = [
 //   {title: 'Мужские кроссовки Nike Blazer', price: 12999, imgUrl: 'https://via.placeholder.com/133'},
@@ -77,8 +80,9 @@ function App() {
 
   const onAddToFavorite = async (obj) => {  //try/catch - нужны для того что бы отлавливать ошибку (используется только при использовании async/await)
     try {
-      if (favorites.find((favObj) => favObj.id === obj.id)) { //если в фаворитах нашёлся id, то
+      if (favorites.find((favObj) => Number(favObj.id) === Number(obj.id))) { //если в фаворитах нашёлся id, то
         axios.delete(`https://62ec129f818ab252b6f78f0d.mockapi.io/favorites/${obj.id}`); // отправляй запрос на удаление в бэкэнд
+        setFavorites((prev) => prev.filter((item) => Number(item.id) !== Number(obj.id)));
         //setFavorites((prev) => prev.filter((item) => item.id !== obj.id)); //отфильтрует все item где item.id !== obj.id
       } else { // иначе (если объект favorites по obj.id не нашёлся ) на пример массив пустой
         const {data} = await axios.post('https://62ec129f818ab252b6f78f0d.mockapi.io/favorites', obj ); // отправить запрос на создание
@@ -94,75 +98,44 @@ function App() {
     setSearchValue(event.target.value)
   }
 
+  const isItemAdded = (id) => {
+    return cartItems.some((obj) => Number(obj.id) === Number(id)); // если есть хоть одно совпадение, то вернёт true
+  }
+
+
   return (
-    <div className="wrapper">
+    <AppContext.Provider value={{items, cartItems, favorites, isItemAdded, onAddToFavorite, setCartOpened, setCartItems}}>
+      <div className="wrapper">
             
-      {cartOpened ? <Basket items = {cartItems} onClose={() => setCartOpened(false)} onRemove={onRemoveItem}/> : null}
+            {cartOpened ? <Basket items = {cartItems} onClose={() => setCartOpened(false)} onRemove={onRemoveItem}/> : null}
+            
+            <Header onClickCart={() => setCartOpened(true)} />
       
-      <Header onClickCart={() => setCartOpened(true)} />
-
-      <Routes>
-        <Route path="/" element={<Home 
-            items={items} 
-            cartItems={cartItems}
-            searchValue={searchValue} 
-            setSearchValue={setSearchValue} 
-            onChangeSearchInput={onChangeSearchInput}
-            onAddToFavorite={onAddToFavorite}
-            onAddToCart={onAddToCart}
-          />}
-          />
-          
-      </Routes>
-
-
-      <Routes>
-        <Route path="/favorites" element={
-        <Favorites items={favorites} onAddToFavorite={onAddToFavorite}/>
-      }
-          />
-          
-      </Routes>
+            <Routes>
+              <Route path="/" element={<Home 
+                  items={items} 
+                  cartItems={cartItems}
+                  searchValue={searchValue} 
+                  setSearchValue={setSearchValue} 
+                  onChangeSearchInput={onChangeSearchInput}
+                  onAddToFavorite={onAddToFavorite}
+                  onAddToCart={onAddToCart}
+                />}
+                />
+                
+            </Routes>
       
-
-      {/* <div className="content">
-        <div className="content__item">
-            <h1 className="content__title">{searchValue ? `Поиск по запросу: "${searchValue}"` : 'Все кроссовки'}</h1>
-            <div className="content__search">
-              <img src="/images/search.svg" alt="Search"/>
-              {searchValue ? 
-              <img 
-                onClick={() => setSearchValue('')}
-                className="basket__remove-btn clear" 
-                src="https://via.placeholder.com/20" 
-                alt="Clear"/> : null}
-              <input onChange={onChangeSearchInput} value={searchValue} placeholder="Поиск..."/>
-            </div>
-        </div>
-
-        <div className="sneakers">
-
-            {items
-            .filter(item => item.title.toLowerCase().includes(searchValue.toLowerCase()))  //перед рендеренгом будет проходится по массиву и будет исключать все item у которых в title нету того, что написано в searchValue и все перевести в нижний регистр
-            .map((item, index) => (
-              <Card
-                key={index}
-                title={item.title}
-                price={item.price}
-                imgUrl={item.imgUrl}
-                onFavorite={(obj) => onAddToFavorite(obj)}
-                onPlus={(obj) => onAddToCart(obj)}
-              />
-            ))}
-
+      
+            <Routes>
+              <Route path="/favorites" element={
+                <Favorites/>
+              }
+                />
+                
+            </Routes>
             
-
-            
-
-        </div>
-
-      </div> */}
-    </div>
+      </div>
+    </AppContext.Provider>
   );
 }
 

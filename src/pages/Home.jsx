@@ -1,13 +1,15 @@
-import Card from '../Card'
+import React from 'react';
+import Card from '../components/Card'
+
 
 function Home({ 
     items,
-    cartItems,
     searchValue,
     setSearchValue,
     onChangeSearchInput,
     onAddToFavorite,
     onAddToCart }) {
+      
     return (
         <div className="content">
         <div className="content__item">
@@ -37,7 +39,7 @@ function Home({
                 imgUrl={item.imgUrl}
                 onFavorite={(obj) => onAddToFavorite(obj)}
                 onPlus={(obj) => onAddToCart(obj)}
-                added={cartItems.some((obj) => Number(obj.id) === Number(item.id))} // если есть хоть одно совпадение, то вернёт true
+                
               />
             ))}
 

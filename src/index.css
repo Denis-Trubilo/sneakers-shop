@@ -136,6 +136,12 @@ header {
    
 }
 
+.basket__blocks {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
 .basket__items {
     flex: 1;
     overflow: auto;
@@ -246,5 +252,37 @@ header {
 
 .green__btn:hover {
     background-color: #a7e160;
+}
+
+.green__btn:hover .green__btn-img{
+    transform: rotate(180deg) translateX(3px);
+}
+
+.green__btn .green__btn-img {
+    position: relative;
+    top: 1px;
+    transform: rotate(180deg);
+    margin-right: 15px;
+    transition: transform 0.15s ease-in-out;
+}
+
+
+.cart__empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    flex: 1;
+}
+
+.cart__empty p{
+    opacity: 0.6;
+    margin-bottom: 40px;
+}
+
+.cart__empty-img {
+    margin-bottom: 20px;
+    width: 120px;
+    height: 120px;
 }
 
