@@ -10,7 +10,7 @@ function Card({ id, imgUrl, title, price, onFavorite, onPlus, favorite = false }
     console.log(title, isItemAdded(id))
 
     const onClickPlus = () => {
-        onPlus({ id, imgUrl, title, price });
+        onPlus({ id, parentId: id,  imgUrl, title, price });
     }
 
     // React.useEffect(() => {
@@ -18,24 +18,30 @@ function Card({ id, imgUrl, title, price, onFavorite, onPlus, favorite = false }
     // }, [isAdded]);
 
     const onClickFavorite = () => {
-        onFavorite({ id, imgUrl, title, price });
+        onFavorite({ id, parentId: id, imgUrl, title, price });
         setIsFavorite(!isFavorite);
     }
 
     return (
         
         <div className={styles.card}>
-            <div className={styles.cardFavourite} onClick={onClickFavorite}>
-                <img src={isFavorite ? "/images/like.svg" : "/images/unlike.svg"} alt="Unlike"/>
-            </div>
-            <img width={133} height={133} src={imgUrl} alt="sneakers"/>
+            {onFavorite &&
+                <div className={styles.cardFavourite} onClick={onClickFavorite}>
+                    <img src={isFavorite ? "images/like.svg" : "images/unlike.svg"} alt="Unlike"/>
+                </div>
+            }
+            
+            <img className={styles.card__img} width={133} height={133} src={imgUrl} alt="sneakers"/>
             <h5>{title}</h5>
             <div className={styles.cardInfo}>
                 <div className={styles.cardItem}>
                     <span>Цена:</span>
                     <b>{price}</b>
                 </div>
-                <img className={styles.cardPlus} onClick={onClickPlus} src={isItemAdded(id) ? "/images/button-checked.svg" : "/images/button-plus.svg"}/>
+                {onPlus && (
+                    <img className={styles.cardPlus} onClick={onClickPlus} src={isItemAdded(id) ? "images/button-checked.svg" : "images/button-plus.svg"}/>
+                )}
+                
                 
             </div>
         </div>

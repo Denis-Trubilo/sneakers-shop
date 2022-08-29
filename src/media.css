@@ -1,0 +1,58 @@
+@media (max-width: 976px) {
+    .sneakers {
+        justify-content: space-around;
+    }
+}
+
+@media (max-width: 720px) {
+    .sneakers {
+        justify-content: space-between;
+    }
+    .content__item {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    .content__search {
+        width: 100%;
+    }
+    .content__title {
+        margin-bottom: 30px;
+    }
+}
+
+@media (max-width: 682px) {
+    header {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    .header__left, .header__right {
+        width: 100%;
+    }
+    .header__left {
+        margin-bottom: 40px;
+    }
+    .header__right {
+        justify-content: space-around;
+    }
+    .sneakers {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 425px) {
+    .header__price {
+        display: none;
+    }
+}
+
+@media (max-width: 425px) {
+    .header__price {
+        display: none;
+    }
+}
+
+@media (max-width: 400px) {
+    .content__search input{
+        width: 100%;
+    }
+}

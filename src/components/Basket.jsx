@@ -11,6 +11,7 @@ function Basket({onClose, onRemove, items = []}) {
     const {cartItems, setCartItems} = React.useContext(AppContext)
     const [orderId, setOrderId] = React.useState(null);
     const [isOrderComplete, setIsOrderComplete] = React.useState(false);
+    const totalPrice = cartItems.reduce((sum, obj) => obj.price + sum, 0);
 
 
     const onClickOrder = async () => {
@@ -22,6 +23,8 @@ function Basket({onClose, onRemove, items = []}) {
             setIsOrderComplete(true);
             setCartItems([]);
 
+
+            // для удаление из корзины на бэкенде при оформлении заказа (используется цикл for т.к. mockAPI некорректно работает )
             for (let i = 0; i < Array.length; i++) {
                 const item = cartItems[i];
                 await axios.delete('https://62ec129f818ab252b6f78f0d.mockapi.io/cart' + item.id);
@@ -37,7 +40,7 @@ function Basket({onClose, onRemove, items = []}) {
         <div  className="overlay">
             
             <div className="basket">
-                <h2>Корзина<img onClick={onClose} className="basket__remove-btn" src="/images/remove.svg" alt="Remove"/></h2>
+                <h2>Корзина<img onClick={onClose} className="basket__remove-btn" src="images/remove.svg" alt="Remove"/></h2>
                 {
                     items.length > 0 ? (
                         <div className="basket__blocks">
@@ -50,7 +53,7 @@ function Basket({onClose, onRemove, items = []}) {
                                 <p>{obj.title}</p>
                                 <b>{obj.price} руб.</b>
                                 </div>
-                                <img onClick={() => onRemove(obj.id)} className="basket__remove-btn" src="/images/remove.svg" alt="Remove"/>
+                                <img onClick={() => onRemove(obj.id)} className="basket__remove-btn" src="images/remove.svg" alt="Remove"/>
                             </div>
 
                             ))}
@@ -62,12 +65,12 @@ function Basket({onClose, onRemove, items = []}) {
                                     <li className="basket__list-item">
                                     <span>Итого:</span>
                                     <div></div>
-                                    <b>21 498 руб.</b>
+                                    <b>{totalPrice} руб.</b>
                                     </li>
                                     <li className="basket__list-item">
                                     <span>Налог 5%:</span>
                                     <div></div>
-                                    <b>1074 руб.</b>
+                                    <b>{Math.round((totalPrice * 5 / 105) * 100) / 100} руб.</b>
                                     </li>
                                 </ul>
                                 <button onClick={onClickOrder} className="basket__btn green__btn">Оформить заказ <img src="images/arrow.svg" alt="Arrow"/></button>

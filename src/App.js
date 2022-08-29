@@ -1,4 +1,5 @@
-import  "./index.css";
+import "./index.css";
+import "./media.css";
 
 import React from "react";
 import { Routes, Route } from 'react-router-dom';
@@ -9,6 +10,10 @@ import Basket from "./components/Basket";
 import AppContext from "./context";
 import Home from "./pages/Home";
 import Favorites from "./pages/Favorites";
+import Orders from "./pages/Orders";
+
+
+
 
 // создаём глобальный объект с поощью которого создаётся зависимость компонентов (что будет менятся в объекте, то будет меняться в компонентах)
 
@@ -62,20 +67,26 @@ function App() {
   // 1. Параллельно отправляем результат на сервер
   // 2. Визуально продукт сохраняем в useState (setCartItems)
 
-  const onAddToCart = (obj) => {
-    if (cartItems.find((item) => Number(item.id) === Number(obj.id))) {
-      axios.delete(`https://62ec129f818ab252b6f78f0d.mockapi.io/cart/${obj.id}`);
-      setCartItems((prev) => prev.filter((item) => Number(item.id) !== Number(obj.id)));
-    } else {
-      axios.post('https://62ec129f818ab252b6f78f0d.mockapi.io/cart', obj );
-      setCartItems((prev) => [...prev, obj]) //забираем предыдущие данные добовляем в них новые(obj) и обновляем массив
+  const onAddToCart = async (obj) => {
+    try{
+      const findItem = cartItems.find((item) => Number(item.parentId) === Number(obj.id));
+        if (findItem) {
+          axios.delete(`https://62ec129f818ab252b6f78f0d.mockapi.io/cart/${findItem.id}`);
+          setCartItems((prev) => prev.filter((item) => Number(item.parentId) !== Number(obj.id)));
+        } else {
+          const {data} = await axios.post('https://62ec129f818ab252b6f78f0d.mockapi.io/cart', obj );
+          setCartItems((prev) => [...prev, data]) //забираем предыдущие данные добовляем в них новые(obj) и обновляем массив
+      }
+    } catch (error) {
+      alert('Ошибка при добавлении в корзину');
     }
+    
     
   }
 
   const onRemoveItem = (id) => {
     axios.delete(`https://62ec129f818ab252b6f78f0d.mockapi.io/cart/${id}`);
-    setCartItems((prev) => prev.filter((item) => item.id !== id)); // когда метод onRemoveItem выполнится, возьми, что сейчас есть в cartItems и вместо передачи нового массива отфильтруй самого себя возьми item и проверь, что item из твоего массива не равен переменной id
+    setCartItems((prev) => prev.filter((item) => Number(item.id) !== Number(id))); // когда метод onRemoveItem выполнится, возьми, что сейчас есть в cartItems и вместо передачи нового массива отфильтруй самого себя возьми item и проверь, что item из твоего массива не равен переменной id
   }
 
   const onAddToFavorite = async (obj) => {  //try/catch - нужны для того что бы отлавливать ошибку (используется только при использовании async/await)
@@ -99,12 +110,13 @@ function App() {
   }
 
   const isItemAdded = (id) => {
-    return cartItems.some((obj) => Number(obj.id) === Number(id)); // если есть хоть одно совпадение, то вернёт true
+    return cartItems.some((obj) => Number(obj.parentId) === Number(id)); // если есть хоть одно совпадение, то вернёт true
   }
 
 
   return (
-    <AppContext.Provider value={{items, cartItems, favorites, isItemAdded, onAddToFavorite, setCartOpened, setCartItems}}>
+    // передаём в контекст значения
+    <AppContext.Provider value={{items, cartItems, favorites, isItemAdded, onAddToFavorite, onAddToCart, setCartOpened, setCartItems}}> 
       <div className="wrapper">
             
             {cartOpened ? <Basket items = {cartItems} onClose={() => setCartOpened(false)} onRemove={onRemoveItem}/> : null}
@@ -112,7 +124,7 @@ function App() {
             <Header onClickCart={() => setCartOpened(true)} />
       
             <Routes>
-              <Route path="/" element={<Home 
+              <Route path="" element={<Home 
                   items={items} 
                   cartItems={cartItems}
                   searchValue={searchValue} 
@@ -127,8 +139,16 @@ function App() {
       
       
             <Routes>
-              <Route path="/favorites" element={
+              <Route path="favorites" element={
                 <Favorites/>
+              }
+                />
+                
+            </Routes>
+
+            <Routes>
+              <Route path="orders" element={
+                <Orders/>
               }
                 />
                 

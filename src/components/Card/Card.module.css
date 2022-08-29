@@ -4,7 +4,7 @@
     width: 220px;
     border-radius: 40px;
     transition: box-shadow 0.2s ease-in-out, transform 0.2s ease-in-out;
-    margin-bottom: 30px;
+    margin: 15px;
 }
 
 .card:hover{
@@ -12,8 +12,30 @@
     transform: translateY(-5px);
 }
 
-.card:not(:last-child) {
-    margin-right: 30px;
+@media (max-width: 682px) {
+    .card {
+        width: 100%;
+        text-align: center;
+    }    
+}
+
+.card__img {
+    width: 133px;
+    height: 133px;
+}
+
+@media (max-width: 682px) {
+    .card__img {
+        width: 160px;
+        height: 160px;
+    }    
+}
+
+@media (max-width: 425px) {
+    .card__img {
+        width: 133px;
+        height: 133px;
+    }    
 }
 
 .cardFavourite {
@@ -37,16 +59,14 @@
     display: flex;
     flex-direction: column;
 }
+@media (max-width: 682px) {
+    .cardItem {
+        
+        text-align: left;
+    }    
+}
 
 .cardPlus {
     cursor: pointer;
 }
 
-/* .cardButton {
-    background: #fff;
-    border: 1px solid #f2f2f2;
-    border-radius: 8px;
-    height: 32px;
-    width: 32px;
-    cursor: pointer;
-} */
