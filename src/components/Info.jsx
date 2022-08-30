@@ -1,6 +1,7 @@
 import React from 'react'
 import AppContext from '../context';
 
+//показывет, когда корзина пустая
 export const Info = ({title, image, description}) => {
 
   const {setCartOpened} = React.useContext(AppContext);

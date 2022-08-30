@@ -13,10 +13,6 @@ function Card({ id, imgUrl, title, price, onFavorite, onPlus, favorite = false }
         onPlus({ id, parentId: id,  imgUrl, title, price });
     }
 
-    // React.useEffect(() => {
-    //     console.log('Переменная изменилась');
-    // }, [isAdded]);
-
     const onClickFavorite = () => {
         onFavorite({ id, parentId: id, imgUrl, title, price });
         setIsFavorite(!isFavorite);

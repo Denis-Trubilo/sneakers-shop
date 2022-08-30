@@ -39,6 +39,12 @@
     }
 }
 
+@media (max-width: 550px) {
+    .basket {
+        width: 100%;
+    }
+}
+
 @media (max-width: 425px) {
     .header__price {
         display: none;
@@ -54,5 +60,11 @@
 @media (max-width: 400px) {
     .content__search input{
         width: 100%;
+    }
+}
+
+@media (max-width: 355px) {
+    .basket__btn img{
+        right: 25px;
     }
 }

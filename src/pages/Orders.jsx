@@ -2,10 +2,10 @@ import axios from 'axios';
 import React from 'react';
 import { useState } from 'react';
 import Card from '../components/Card';
-//import AppContext from '../context';
+
 
 function Orders() {
-  //const {onAddToFavorite, onAddToCart} = React.useContext(AppContext)
+  
 
   const [orders, setOrders] = useState([]); // добавить 
     
@@ -15,7 +15,7 @@ function Orders() {
       async function getOrders() {
         const {data} = await axios.get('https://62ec129f818ab252b6f78f0d.mockapi.io/orders');
         setOrders(data.map((obj) => obj.items).flat())
-        //setOrders(data.reduse((prev, obj) => [...prev, ...obj.items], []));
+        
       }
       getOrders();
     } catch (error) {
